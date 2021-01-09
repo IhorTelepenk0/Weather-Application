@@ -1,0 +1,71 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Build">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{ece3e5c0-c151-41ad-8286-411c58ee8656}</ProjectGuid>
+    <ProjectHome />
+    <StartupFile>weather_app.py</StartupFile>
+    <SearchPath />
+    <WorkingDirectory>.</WorkingDirectory>
+    <OutputPath>.</OutputPath>
+    <ProjectTypeGuids>{888888a0-9f3d-457c-b088-3a5042f75d52}</ProjectTypeGuids>
+    <LaunchProvider>Standard Python launcher</LaunchProvider>
+    <InterpreterId>Global|PythonCore|3.7</InterpreterId>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'" />
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'" />
+  <PropertyGroup>
+    <VisualStudioVersion Condition=" '$(VisualStudioVersion)' == '' ">10.0</VisualStudioVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <Content Include="config.ini" />
+    <Content Include="weather_icons\01d.png" />
+    <Content Include="weather_icons\01n.png" />
+    <Content Include="weather_icons\02d.png" />
+    <Content Include="weather_icons\02n.png" />
+    <Content Include="weather_icons\03d.png" />
+    <Content Include="weather_icons\03n.png" />
+    <Content Include="weather_icons\04d.png" />
+    <Content Include="weather_icons\04n.png" />
+    <Content Include="weather_icons\09d.png" />
+    <Content Include="weather_icons\09n.png" />
+    <Content Include="weather_icons\10d.png" />
+    <Content Include="weather_icons\10n.png" />
+    <Content Include="weather_icons\11d.png" />
+    <Content Include="weather_icons\11n.png" />
+    <Content Include="weather_icons\13d.png" />
+    <Content Include="weather_icons\13n.png" />
+    <Content Include="weather_icons\50d.png" />
+    <Content Include="weather_icons\50n.png" />
+    <Content Include="weather_icons_gifs\01d.gif" />
+    <Content Include="weather_icons_gifs\01n.gif" />
+    <Content Include="weather_icons_gifs\02d.gif" />
+    <Content Include="weather_icons_gifs\02n.gif" />
+    <Content Include="weather_icons_gifs\03d.gif" />
+    <Content Include="weather_icons_gifs\03n.gif" />
+    <Content Include="weather_icons_gifs\04d.gif" />
+    <Content Include="weather_icons_gifs\04n.gif" />
+    <Content Include="weather_icons_gifs\09d.gif" />
+    <Content Include="weather_icons_gifs\09n.gif" />
+    <Content Include="weather_icons_gifs\10d.gif" />
+    <Content Include="weather_icons_gifs\10n.gif" />
+    <Content Include="weather_icons_gifs\11d.gif" />
+    <Content Include="weather_icons_gifs\11n.gif" />
+    <Content Include="weather_icons_gifs\13d.gif" />
+    <Content Include="weather_icons_gifs\13n.gif" />
+    <Content Include="weather_icons_gifs\50d.gif" />
+    <Content Include="weather_icons_gifs\50n.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="weather_app.py" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="weather_icons" />
+    <Folder Include="weather_icons_gifs" />
+  </ItemGroup>
+  <ItemGroup>
+    <InterpreterReference Include="Global|PythonCore|3.7" />
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
+</Project>
