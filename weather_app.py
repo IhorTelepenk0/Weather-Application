@@ -2,7 +2,7 @@ from tkinter import *
 from tkinter import messagebox
 from configparser import ConfigParser
 import requests
-#vs
+#vs + in devopps
 
 
 urlAPI = 'http://api.openweathermap.org/data/2.5/weather?q={}&appid={}'
