@@ -2,7 +2,7 @@ from tkinter import *
 from tkinter import messagebox
 from configparser import ConfigParser
 import requests
-#vs + in devopps + devops repo now uploaded on visual studio 2
+#vs + in devopps + devops repo now uploaded on visual studio
 
 
 urlAPI = 'http://api.openweathermap.org/data/2.5/weather?q={}&appid={}'
