@@ -42,6 +42,12 @@ def search() :
     else:
         messagebox.showerror('Error', 'Cannot find {}'.format(city))
 
+def openDescr():
+    detailsApp = Tk()
+    detailsApp.title("Weather description window")
+    detailsApp.geometry("700x350")
+    detailsApp.mainloop
+
 app = Tk()
 app.title("Weather app")
 app.geometry('700x350')
@@ -66,5 +72,9 @@ temperLbl.pack()
 weatherLbl = Label(app, text = 'Weather')
 weatherLbl.pack()
 
+
+
+detailedDescrBtn = Button(app, text = 'View Details', width = 15, command = openDescr)
+detailedDescrBtn.pack()
 
 app.mainloop()
