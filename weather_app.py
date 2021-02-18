@@ -1,8 +1,11 @@
 from tkinter import *
 from tkinter import messagebox
 from configparser import ConfigParser
+
+from datetime import datetime
+
 import requests
-#vs + in devopps + devops repo now uploaded on visual studio
+
 
 
 urlAPI = 'http://api.openweathermap.org/data/2.5/weather?q={}&appid={}'
@@ -29,6 +32,28 @@ def getWeather(city):
     else:
         return None
 
+def getWeatherDetails():
+    city = cityText.get()
+    res = requests.get(urlAPI.format(city, apiKey))
+    if res:
+        jsonRes = res.json()
+        #to receive (coord1, coord2, detDescr, minTemp, maxTemp, windSpeed, pressure, humidity, locTime)
+        coordLon = jsonRes['coord']['lon']
+        coordLat = jsonRes['coord']['lat']
+        detDescr = jsonRes['weather'][0]['description']
+        tempMin = jsonRes['main']['temp_min'] - 273.15
+        tempMax = jsonRes['main']['temp_max'] - 273.15
+        windSpeed = jsonRes['wind']['speed']
+        pressure = jsonRes['main']['pressure']
+        humid = jsonRes['main']['humidity']
+        shiftFromUTC = jsonRes['timezone']
+        theDateTime = datetime.utcfromtimestamp(int(jsonRes['dt']) + int(shiftFromUTC)).strftime('%Y-%m-%d %H:%M:%S')
+
+        finalRet = (coordLon, coordLat, detDescr, tempMin, tempMax, windSpeed, pressure, humid, theDateTime)   #it's touple
+        return finalRet
+    else:
+        return None
+
 #print(getWeather('London'))
 
 def search() :
@@ -42,11 +67,6 @@ def search() :
     else:
         messagebox.showerror('Error', 'Cannot find {}'.format(city))
 
-def openDescr():
-    detailsApp = Tk()
-    detailsApp.title("Weather description window")
-    detailsApp.geometry("700x350")
-    detailsApp.mainloop
 
 app = Tk()
 app.title("Weather app")
@@ -72,6 +92,57 @@ temperLbl.pack()
 weatherLbl = Label(app, text = 'Weather')
 weatherLbl.pack()
 
+
+    
+
+
+def openDescr():
+    detailsApp = Tk()
+    detailsApp.title("Weather description window")
+    detailsApp.geometry("700x350")
+
+    locLbl = Label(detailsApp, text = locationLbl['text'], font = ('bold', 20))
+    locLbl.pack()
+
+    coordinatesLbl = Label(detailsApp, text = 'Coordinates')
+    coordinatesLbl.pack()
+
+    descriptionLbl = Label(detailsApp, text = 'Description')
+    descriptionLbl.pack()
+
+    minTemperatoreLbl = Label(detailsApp, text = 'Min Temperature')
+    minTemperatoreLbl.pack()
+
+    maxTemperatoreLbl = Label(detailsApp, text = 'Max Temperature')
+    maxTemperatoreLbl.pack()
+
+    windSpLbl = Label(detailsApp, text = 'Wind Speed')
+    windSpLbl.pack()
+
+    atmPressureLbl = Label(detailsApp, text = 'Atmospheric Pressure')
+    atmPressureLbl.pack()
+
+    humidLbl = Label(detailsApp, text = 'Humidity')
+    humidLbl.pack()
+
+    locDateTimeLbl = Label(detailsApp, text = 'Date and Time')
+    locDateTimeLbl.pack()
+
+    theDetails = getWeatherDetails()
+
+    if theDetails:
+        coordinatesLbl['text'] = '{}, {}'.format(theDetails[1], theDetails[0])
+        descriptionLbl['text'] = 'There is: {}'.format(theDetails[2])
+        minTemperatoreLbl['text'] = 'Minimal Temperature: {:.2f}°C'.format(theDetails[3])
+        maxTemperatoreLbl['text'] = 'Maximal Temperature: {:.2f}°C'.format(theDetails[4])
+        windSpLbl['text']= 'Speed of Wind: {} m/s'.format(theDetails[5])
+        atmPressureLbl['text'] = 'Atmospheric Pressure: {} hPa'.format(theDetails[6])
+        humidLbl['text'] = 'Humidity level: {} %'.format(theDetails[7])
+        locDateTimeLbl['text'] = 'Local Date and Time of last measurements: {}'.format(theDetails[8])
+    else:
+        messagebox.showerror('Error', 'Cannot find location')
+
+    detailsApp.mainloop()
 
 
 detailedDescrBtn = Button(app, text = 'View Details', width = 15, command = openDescr)
