@@ -5,6 +5,7 @@ from configparser import ConfigParser
 from datetime import datetime
 
 import requests
+import json #for next storing data
 
 
 
@@ -113,6 +114,13 @@ def openDescr():
 
     detailsApp.mainloop()
 
+#in quick_tabs_cities the cities are stored in JSON format (for 3 buttons):
+#quickCitiesData = {
+#    '1': 'Rzeszow',
+#    '2': 'Casablanca',
+#    '3': 'Vinnytsia'
+#}
+
 def quickRun(ind):
     if ind == 1:
         cityText.set(quickSearch1Btn['text'])
@@ -124,12 +132,20 @@ def quickRun(ind):
 
 def writeQuickBut(ind):
     if cityText.get() != '':
+        with open('Data/quick_tabs_cities.dat') as json_file:
+            dataCities = json.load(json_file)
         if ind == 1:
             quickSearch1Btn['text'] = cityText.get()
+            dataCities['1'] = quickSearch1Btn['text']
         if ind == 2:
             quickSearch2Btn['text'] = cityText.get()
+            dataCities['2'] = quickSearch2Btn['text']
         if ind == 3:
             quickSearch3Btn['text'] = cityText.get()
+            dataCities['3'] = quickSearch3Btn['text']
+        with open('Data/quick_tabs_cities.dat', 'w') as outfile:
+            outfile.truncate(0)
+            json.dump(dataCities, outfile)
 
 app = Tk()
 app.title("Weather app")
@@ -173,14 +189,17 @@ writeQuick3Btn = Button(app, image = pencilImg, command = lambda: writeQuickBut(
 writeQuick3Btn.place(x = 480, y = 250)
 
 
-quickSearch1Btn = Button(app, text = 'Casablanca', width = 25, command = lambda: quickRun(1))
+with open('Data/quick_tabs_cities.dat') as json_file:
+    dataCities = json.load(json_file)
+
+quickSearch1Btn = Button(app, text = dataCities['1'], width = 25, command = lambda: quickRun(1))
 quickSearch1Btn.place(x=500,y=200)
 
-quickSearch2Btn = Button(app, text = 'Vinnytsia', width = 25, command = lambda: quickRun(2))
+quickSearch2Btn = Button(app, text = dataCities['2'], width = 25, command = lambda: quickRun(2))
 quickSearch2Btn.place(x=500,y=225)
 
-quickSearch3Btn = Button(app, text = 'Warsaw', width = 25, command = lambda: quickRun(3))
+quickSearch3Btn = Button(app, text = dataCities['3'], width = 25, command = lambda: quickRun(3))
 quickSearch3Btn.place(x=500,y=250)
 
-
+ 
 app.mainloop()
