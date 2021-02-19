@@ -20,6 +20,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Content Include="config.ini" />
+    <Content Include="tech_icons\pencil.png" />
     <Content Include="weather_icons\01d.png" />
     <Content Include="weather_icons\01n.png" />
     <Content Include="weather_icons\02d.png" />
@@ -38,31 +39,14 @@
     <Content Include="weather_icons\13n.png" />
     <Content Include="weather_icons\50d.png" />
     <Content Include="weather_icons\50n.png" />
-    <Content Include="weather_icons_gifs\01d.gif" />
-    <Content Include="weather_icons_gifs\01n.gif" />
-    <Content Include="weather_icons_gifs\02d.gif" />
-    <Content Include="weather_icons_gifs\02n.gif" />
-    <Content Include="weather_icons_gifs\03d.gif" />
-    <Content Include="weather_icons_gifs\03n.gif" />
-    <Content Include="weather_icons_gifs\04d.gif" />
-    <Content Include="weather_icons_gifs\04n.gif" />
-    <Content Include="weather_icons_gifs\09d.gif" />
-    <Content Include="weather_icons_gifs\09n.gif" />
-    <Content Include="weather_icons_gifs\10d.gif" />
-    <Content Include="weather_icons_gifs\10n.gif" />
-    <Content Include="weather_icons_gifs\11d.gif" />
-    <Content Include="weather_icons_gifs\11n.gif" />
-    <Content Include="weather_icons_gifs\13d.gif" />
-    <Content Include="weather_icons_gifs\13n.gif" />
-    <Content Include="weather_icons_gifs\50d.gif" />
-    <Content Include="weather_icons_gifs\50n.gif" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="weather_app.py" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Data\" />
+    <Folder Include="tech_icons\" />
     <Folder Include="weather_icons" />
-    <Folder Include="weather_icons_gifs" />
   </ItemGroup>
   <ItemGroup>
     <InterpreterReference Include="Global|PythonCore|3.7" />
