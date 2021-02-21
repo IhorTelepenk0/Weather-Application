@@ -5,8 +5,7 @@ from configparser import ConfigParser
 from datetime import datetime
 
 import requests
-import json #for next storing data
-
+import json
 
 
 urlAPI = 'http://api.openweathermap.org/data/2.5/weather?q={}&appid={}'
@@ -38,13 +37,61 @@ def search() :
     city = cityText.get()
     weather = getWeather(city)
     if weather:
-        locationLbl['text'] = '{},{}'.format(weather[0],weather[1])
+        locationLbl['text'] = '{}, {}'.format(weather[0],weather[1])
         img['file'] = 'weather_icons/{}.png'.format(weather[3])
         temperLbl['text'] = '{:.2f}°C'.format(weather[2])
         weatherLbl['text'] = weather[4]
         app.focus()
     else:
         messagebox.showerror('Wrong Location Chosen', '"{}" is not found!'.format(city))
+
+def cityReps(city):
+    with open('Data/city_list.json', encoding = "UTF-8") as json_file:
+        allCities = json.load(json_file)
+    repIds = []
+    for checkedCityEntry in allCities:
+        if checkedCityEntry['name'] == city:
+            repIds.append(checkedCityEntry['id'])
+    return repIds
+
+def multipleCitiesFound():
+    cityChoosingWind = Tk()
+    cityChoosingWind.title = "Cities With Such Name:"
+    cityChoosingWind.geometry("200x250")
+
+    indicesCities = cityReps(locationLbl['text'].split(',')[0])
+
+    with open('Data/city_list.json', encoding = "UTF-8") as json_file:
+            allCities = json.load(json_file)
+
+    shownOptions = []
+    for checkedIndex in indicesCities:
+        for checkedCityEntry in allCities:
+            if checkedCityEntry['id'] == checkedIndex:
+                shownOptions.append(checkedCityEntry['name'] + ', ' + checkedCityEntry['country'])
+
+    def searchTheChosenCity():
+        if(variableOptions.get() != 'Choose city:'):
+            cityText.set(variableOptions.get())
+            search()
+            cityChoosingWind.destroy()
+    
+    shownOptions = list(set(shownOptions))
+
+    if len(shownOptions) < 2:
+        citiesNotFoundLbl = Label(cityChoosingWind, text = 'No alternatives found.')  
+        citiesNotFoundLbl.pack()
+    else:
+        variableOptions = StringVar(cityChoosingWind)
+        variableOptions.set('Choose city:') # default value
+        menuCities = OptionMenu(cityChoosingWind, variableOptions, *shownOptions)
+        menuCities.pack()
+
+        chosenSearchBtn = Button(cityChoosingWind, text = 'Search this', command = searchTheChosenCity)
+        chosenSearchBtn.pack()
+
+    cityChoosingWind.mainloop()
+
 
 def getWeatherDetails():
     city = cityText.get()
@@ -178,6 +225,9 @@ temperLbl.pack()
 weatherLbl = Label(app, text = 'Weather')
 weatherLbl.pack()
 
+
+otherCitiesBtn = Button(app, text = 'Other Cities "{}"'.format(cityText.get()), command = multipleCitiesFound)
+otherCitiesBtn.pack()
 
 
 detailedDescrBtn = Button(app, text = 'View Details', width = 15, command = openDescr)
