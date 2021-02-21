@@ -15,7 +15,8 @@ configFile = 'config.ini'
 config = ConfigParser()
 config.read(configFile)
 apiKey = config['apiKey']['key']
-#print(apiKey)
+
+
 
 def getWeather(city):
     result = requests.get(urlAPI.format(city, apiKey))  #format works specially with '{}' brackets
@@ -41,8 +42,9 @@ def search() :
         img['file'] = 'weather_icons/{}.png'.format(weather[3])
         temperLbl['text'] = '{:.2f}°C'.format(weather[2])
         weatherLbl['text'] = weather[4]
+        app.focus()
     else:
-        messagebox.showerror('Error', 'Cannot find {}'.format(city))
+        messagebox.showerror('Wrong Location Chosen', '"{}" is not found!'.format(city))
 
 def getWeatherDetails():
     city = cityText.get()
@@ -59,12 +61,13 @@ def getWeatherDetails():
         pressure = jsonRes['main']['pressure']
         humid = jsonRes['main']['humidity']
         shiftFromUTC = jsonRes['timezone']
-        theDateTime = datetime.utcfromtimestamp(int(jsonRes['dt']) + int(shiftFromUTC)).strftime('%Y-%m-%d %H:%M:%S')
-
-        finalRet = (coordLon, coordLat, detDescr, tempMin, tempMax, windSpeed, pressure, humid, theDateTime)   #it's touple
+        theDateTimeMes = datetime.utcfromtimestamp(int(jsonRes['dt']) + int(shiftFromUTC)).strftime('%Y-%m-%d %H:%M:%S')
+        theDateTime = datetime.fromtimestamp(datetime.utcnow().timestamp()+int(shiftFromUTC)).strftime('%Y-%m-%d %H:%M:%S')
+        finalRet = (coordLon, coordLat, detDescr, tempMin, tempMax, windSpeed, pressure, humid, theDateTimeMes, theDateTime)   #it's touple
         return finalRet
     else:
         return None
+
 
 def openDescr():
     detailsApp = Tk()
@@ -95,7 +98,10 @@ def openDescr():
     humidLbl = Label(detailsApp, text = 'Humidity')
     humidLbl.pack()
 
-    locDateTimeLbl = Label(detailsApp, text = 'Date and Time')
+    locDateTimeMesLbl = Label(detailsApp, text = 'Date and Time')
+    locDateTimeMesLbl.pack()
+
+    locDateTimeLbl = Label(detailsApp, text = 'Local Date and Time')
     locDateTimeLbl.pack()
 
     theDetails = getWeatherDetails()
@@ -108,7 +114,8 @@ def openDescr():
         windSpLbl['text']= 'Speed of Wind: {} m/s'.format(theDetails[5])
         atmPressureLbl['text'] = 'Atmospheric Pressure: {} hPa'.format(theDetails[6])
         humidLbl['text'] = 'Humidity level: {} %'.format(theDetails[7])
-        locDateTimeLbl['text'] = 'Local Date and Time of last measurements: {}'.format(theDetails[8])
+        locDateTimeLbl['text'] = 'Local Date and Time of the request: {}'.format(theDetails[9])
+        locDateTimeMesLbl['text'] = 'Local Date and Time of last measurements: {}'.format(theDetails[8])
     else:
         messagebox.showerror('Error', 'Cannot find location')
 
@@ -132,7 +139,7 @@ def quickRun(ind):
 
 def writeQuickBut(ind):
     if cityText.get() != '':
-        with open('Data/quick_tabs_cities.dat') as json_file:
+        with open('Data/quick_tabs_cities.json') as json_file:
             dataCities = json.load(json_file)
         if ind == 1:
             quickSearch1Btn['text'] = cityText.get()
@@ -143,7 +150,7 @@ def writeQuickBut(ind):
         if ind == 3:
             quickSearch3Btn['text'] = cityText.get()
             dataCities['3'] = quickSearch3Btn['text']
-        with open('Data/quick_tabs_cities.dat', 'w') as outfile:
+        with open('Data/quick_tabs_cities.json', 'w') as outfile:
             outfile.truncate(0)
             json.dump(dataCities, outfile)
 
@@ -189,7 +196,7 @@ writeQuick3Btn = Button(app, image = pencilImg, command = lambda: writeQuickBut(
 writeQuick3Btn.place(x = 480, y = 250)
 
 
-with open('Data/quick_tabs_cities.dat') as json_file:
+with open('Data/quick_tabs_cities.json') as json_file:
     dataCities = json.load(json_file)
 
 quickSearch1Btn = Button(app, text = dataCities['1'], width = 25, command = lambda: quickRun(1))
