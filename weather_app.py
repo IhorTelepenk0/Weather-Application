@@ -33,6 +33,19 @@ def getWeather(city):
     else:
         return None
 
+def storeHist(cityName):
+
+     if cityName != '':
+        with open('Data/search_history.json') as json_file:
+            cityStored = json.load(json_file)
+            for i in range(4, 0, -1):
+                cityStored[str(i)] = cityStored[str(i-1)]
+            cityStored['0'] = cityName
+        with open('Data/search_history.json', 'w') as outfile:
+            outfile.truncate(0)
+            json.dump(cityStored, outfile)
+
+
 def search() :
     city = cityText.get()
     weather = getWeather(city)
@@ -41,7 +54,8 @@ def search() :
         img['file'] = 'weather_icons/{}.png'.format(weather[3])
         temperLbl['text'] = '{:.2f}°C'.format(weather[2])
         weatherLbl['text'] = weather[4]
-        app.focus()
+        app.focus
+        storeHist(city)
     else:
         messagebox.showerror('Wrong Location Chosen', '"{}" is not found!'.format(city))
 
@@ -201,6 +215,27 @@ def writeQuickBut(ind):
             outfile.truncate(0)
             json.dump(dataCities, outfile)
 
+def historyDisplay():
+    with open('Data/search_history.json') as json_file:
+        historyCities = json.load(json_file)
+    historyOptions = []
+    
+    #historyOptions[0] = historyCities['city1']
+    #historyOptions[1] = historyCities['city2']
+    for histIndex in range(5):
+        historyOptions.append(historyCities[str(histIndex)])
+
+    def searchChosenCity (chosenCity):
+        if(chosenCity != 'Last searches:'):
+            cityText.set(chosenCity)
+            search()
+        menuHist.destroy()
+
+    dropdownSet = StringVar(app)
+    dropdownSet.set('Last searches:') 
+    menuHist = OptionMenu(app, dropdownSet, *historyOptions, command =  searchChosenCity)
+    menuHist.pack()
+
 app = Tk()
 app.title("Weather app")
 app.geometry('700x350')
@@ -258,5 +293,8 @@ quickSearch2Btn.place(x=500,y=225)
 quickSearch3Btn = Button(app, text = dataCities['3'], width = 25, command = lambda: quickRun(3))
 quickSearch3Btn.place(x=500,y=250)
 
+
+historyBtn = Button(app, text = 'History', command = historyDisplay)
+historyBtn.pack()
  
 app.mainloop()
