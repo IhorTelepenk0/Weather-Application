@@ -45,6 +45,11 @@ def storeHist(cityName):
             outfile.truncate(0)
             json.dump(cityStored, outfile)
 
+def findAndDestoryDisplayedElems(window, type):
+    allWidgets = window.pack_slaves()
+    for widget in allWidgets:
+        if widget.winfo_class() == type:
+            widget.destroy()
 
 def search() :
     city = cityText.get()
@@ -54,10 +59,16 @@ def search() :
         img['file'] = 'weather_icons/{}.png'.format(weather[3])
         temperLbl['text'] = '{:.2f}°C'.format(weather[2])
         weatherLbl['text'] = weather[4]
-        app.focus
+        app.focus()
         storeHist(city)
+        detailedDescrBtn.pack()
+        otherCitiesBtn['text'] = 'Other Cities "{}"'.format(cityText.get().split(',')[0])
+        otherCitiesBtn.pack()
+        if historyBtn.winfo_manager() == "" :
+            historyBtn.pack()
+            findAndDestoryDisplayedElems(app, 'Menubutton')
     else:
-        messagebox.showerror('Wrong Location Chosen', '"{}" is not found!'.format(city))
+        messagebox.showerror('Wrong Location Chosen', '"{}" is not found.'.format(city))
 
 def cityReps(city):
     with open('Data/city_list.json', encoding = "UTF-8") as json_file:
@@ -216,6 +227,7 @@ def writeQuickBut(ind):
             json.dump(dataCities, outfile)
 
 def historyDisplay():
+    
     with open('Data/search_history.json') as json_file:
         historyCities = json.load(json_file)
     historyOptions = []
@@ -228,16 +240,20 @@ def historyDisplay():
     def searchChosenCity (chosenCity):
         if(chosenCity != 'Last searches:'):
             cityText.set(chosenCity)
+            historyBtn.pack()
             search()
-        menuHist.destroy()
+            menuHist.destroy()
+        
 
     dropdownSet = StringVar(app)
     dropdownSet.set('Last searches:') 
     menuHist = OptionMenu(app, dropdownSet, *historyOptions, command =  searchChosenCity)
+    historyBtn.pack_forget()
     menuHist.pack()
 
+
 app = Tk()
-app.title("Weather app")
+app.title("Weather application")
 app.geometry('700x350')
 
 cityText = StringVar()
@@ -247,26 +263,26 @@ cityEntry.pack() #placing it on the screen
 searchBtn = Button(app, text = 'Search weather', width = 12, command = search)
 searchBtn.pack()
 
-locationLbl = Label(app, text = 'Location', font = ('bold', 20))
+locationLbl = Label(app, text = '', font = ('bold', 20))
 locationLbl.pack()
 
 img = PhotoImage(file = '')
 image = Label(app, image = img)
 image.pack()
 
-temperLbl = Label(app, text = 'Temperature')
+temperLbl = Label(app, text = '')
 temperLbl.pack()
 
-weatherLbl = Label(app, text = 'Weather')
+weatherLbl = Label(app, text = '')
 weatherLbl.pack()
 
 
-otherCitiesBtn = Button(app, text = 'Other Cities "{}"'.format(cityText.get()), command = multipleCitiesFound)
-otherCitiesBtn.pack()
+otherCitiesBtn = Button(app, text = 'Other Cities', command = multipleCitiesFound)
+#otherCitiesBtn.pack()
 
 
 detailedDescrBtn = Button(app, text = 'View Details', width = 15, command = openDescr)
-detailedDescrBtn.pack()
+#detailedDescrBtn.pack()
 
 
 
