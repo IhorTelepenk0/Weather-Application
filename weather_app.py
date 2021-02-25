@@ -46,7 +46,8 @@ def storeHist(cityName):
             json.dump(cityStored, outfile)
 
 def findAndDestoryDisplayedElems(window, type):
-    allWidgets = window.pack_slaves()
+    allWidgets = window.place_slaves()
+    #print("widgets: ", allWidgets)
     for widget in allWidgets:
         if widget.winfo_class() == type:
             widget.destroy()
@@ -61,11 +62,11 @@ def search() :
         weatherLbl['text'] = weather[4]
         app.focus()
         storeHist(city)
-        detailedDescrBtn.pack()
+        detailedDescrBtn.place(relx = 0.5, rely = 0.8, anchor = CENTER)
         otherCitiesBtn['text'] = 'Other Cities "{}"'.format(cityText.get().split(',')[0])
-        otherCitiesBtn.pack()
+        otherCitiesBtn.place(relx = 0.5, rely = 0.91, anchor = CENTER)
         if historyBtn.winfo_manager() == "" :
-            historyBtn.pack()
+            historyBtn.place(relheight = 0.07, relx = 0.3, rely = 0.06)
             findAndDestoryDisplayedElems(app, 'Menubutton')
     else:
         messagebox.showerror('Wrong Location Chosen', '"{}" is not found.'.format(city))
@@ -82,7 +83,7 @@ def cityReps(city):
 def multipleCitiesFound():
     cityChoosingWind = Tk()
     cityChoosingWind.title = "Cities With Such Name:"
-    cityChoosingWind.geometry("200x250")
+    cityChoosingWind.geometry("200x100")
 
     indicesCities = cityReps(locationLbl['text'].split(',')[0])
 
@@ -144,36 +145,47 @@ def getWeatherDetails():
 def openDescr():
     detailsApp = Tk()
     detailsApp.title("Weather description window")
-    detailsApp.geometry("700x350")
+    detailsApp.geometry("500x250")
+    detailsApp['bg']='#62B0E5'
 
     locLbl = Label(detailsApp, text = locationLbl['text'], font = ('bold', 20))
+    locLbl['bg']='#62B0E5'
     locLbl.pack()
 
     coordinatesLbl = Label(detailsApp, text = 'Coordinates')
+    coordinatesLbl['bg']='#62B0E5'
     coordinatesLbl.pack()
 
     descriptionLbl = Label(detailsApp, text = 'Description')
+    descriptionLbl['bg']='#62B0E5'
     descriptionLbl.pack()
 
-    minTemperatoreLbl = Label(detailsApp, text = 'Min Temperature')
-    minTemperatoreLbl.pack()
+    minTemperatureLbl = Label(detailsApp, text = 'Min Temperature')
+    minTemperatureLbl['bg']='#62B0E5'
+    minTemperatureLbl.pack()
 
-    maxTemperatoreLbl = Label(detailsApp, text = 'Max Temperature')
-    maxTemperatoreLbl.pack()
+    maxTemperatureLbl = Label(detailsApp, text = 'Max Temperature')
+    maxTemperatureLbl['bg']='#62B0E5'
+    maxTemperatureLbl.pack()
 
     windSpLbl = Label(detailsApp, text = 'Wind Speed')
+    windSpLbl['bg']='#62B0E5'
     windSpLbl.pack()
 
     atmPressureLbl = Label(detailsApp, text = 'Atmospheric Pressure')
+    atmPressureLbl['bg']='#62B0E5'
     atmPressureLbl.pack()
 
     humidLbl = Label(detailsApp, text = 'Humidity')
+    humidLbl['bg']='#62B0E5'
     humidLbl.pack()
 
     locDateTimeMesLbl = Label(detailsApp, text = 'Date and Time')
+    locDateTimeMesLbl['bg']='#62B0E5'
     locDateTimeMesLbl.pack()
 
     locDateTimeLbl = Label(detailsApp, text = 'Local Date and Time')
+    locDateTimeLbl['bg']='#62B0E5'
     locDateTimeLbl.pack()
 
     theDetails = getWeatherDetails()
@@ -181,8 +193,8 @@ def openDescr():
     if theDetails:
         coordinatesLbl['text'] = '{}, {}'.format(theDetails[1], theDetails[0])
         descriptionLbl['text'] = 'There is: {}'.format(theDetails[2])
-        minTemperatoreLbl['text'] = 'Minimal Temperature: {:.2f}°C'.format(theDetails[3])
-        maxTemperatoreLbl['text'] = 'Maximal Temperature: {:.2f}°C'.format(theDetails[4])
+        minTemperatureLbl['text'] = 'Minimal Temperature: {:.2f}°C'.format(theDetails[3])
+        maxTemperatureLbl['text'] = 'Maximal Temperature: {:.2f}°C'.format(theDetails[4])
         windSpLbl['text']= 'Speed of Wind: {} m/s'.format(theDetails[5])
         atmPressureLbl['text'] = 'Atmospheric Pressure: {} hPa'.format(theDetails[6])
         humidLbl['text'] = 'Humidity level: {} %'.format(theDetails[7])
@@ -240,7 +252,7 @@ def historyDisplay():
     def searchChosenCity (chosenCity):
         if(chosenCity != 'Last searches:'):
             cityText.set(chosenCity)
-            historyBtn.pack()
+            historyBtn.place(relheight = 0.07, relx = 0.3, rely = 0.06)
             search()
             menuHist.destroy()
         
@@ -248,33 +260,42 @@ def historyDisplay():
     dropdownSet = StringVar(app)
     dropdownSet.set('Last searches:') 
     menuHist = OptionMenu(app, dropdownSet, *historyOptions, command =  searchChosenCity)
-    historyBtn.pack_forget()
-    menuHist.pack()
+    historyBtn.place_forget()
+    menuHist.place(relheight = 0.07, relx = 0.21, rely = 0.06)
 
 
 app = Tk()
 app.title("Weather application")
 app.geometry('700x350')
+app['bg'] = '#62B0E5'
 
 cityText = StringVar()
 cityEntry = Entry(app, textvariable = cityText)
-cityEntry.pack() #placing it on the screen
+#cityEntry.pack() 
+cityEntry.place(relwidth = 0.2, relheight = 0.07, relx = 0.39, rely = 0.06)
 
-searchBtn = Button(app, text = 'Search weather', width = 12, command = search)
-searchBtn.pack()
+searchImg = PhotoImage(file = 'tech_icons/search_icon.png')
+searchBtn = Button(app, image = searchImg, width = 12, command = search)
+searchBtn['bg'] = '#FFFFFF'
+#searchBtn.pack()
+searchBtn.place(relwidth = 0.04, relheight = 0.07, relx = 0.6, rely = 0.06)
 
-locationLbl = Label(app, text = '', font = ('bold', 20))
-locationLbl.pack()
+locationLbl = Label(app, text = '', font = ('bold', 20), justify = CENTER)
+locationLbl['bg'] = '#62B0E5'
+locationLbl.place(relwidth = 0.38, relx = 0.5, rely = 0.25, anchor = CENTER)
 
 img = PhotoImage(file = '')
-image = Label(app, image = img)
-image.pack()
+image = Label(app, image = img, justify = CENTER)
+image['bg'] = '#62B0E5'
+image.place(relx = 0.5, rely = 0.44, anchor = CENTER)
 
-temperLbl = Label(app, text = '')
-temperLbl.pack()
+temperLbl = Label(app, text = '', font = ('bold'), justify = CENTER)
+temperLbl['bg'] = '#62B0E5'
+temperLbl.place(relx = 0.5, rely = 0.6, anchor = CENTER)
 
-weatherLbl = Label(app, text = '')
-weatherLbl.pack()
+weatherLbl = Label(app, text = '', justify = CENTER)
+weatherLbl['bg'] = '#62B0E5'
+weatherLbl.place(relx = 0.5, rely = 0.7, anchor = CENTER)
 
 
 otherCitiesBtn = Button(app, text = 'Other Cities', command = multipleCitiesFound)
@@ -288,29 +309,29 @@ detailedDescrBtn = Button(app, text = 'View Details', width = 15, command = open
 
 pencilImg = PhotoImage(file = 'tech_icons/pencil.png')
 writeQuick1Btn = Button(app, image = pencilImg, command = lambda: writeQuickBut(1))
-writeQuick1Btn.place(x = 480, y = 200)
+writeQuick1Btn.place(relx = 0.7, rely = 0.37, anchor = CENTER)
 
 writeQuick2Btn = Button(app, image = pencilImg, command = lambda: writeQuickBut(2))
-writeQuick2Btn.place(x = 480, y = 225)
+writeQuick2Btn.place(relx = 0.7, rely = 0.45, anchor = CENTER)
 
 writeQuick3Btn = Button(app, image = pencilImg, command = lambda: writeQuickBut(3))
-writeQuick3Btn.place(x = 480, y = 250)
+writeQuick3Btn.place(relx = 0.7, rely = 0.53, anchor = CENTER)
 
 
 with open('Data/quick_tabs_cities.json') as json_file:
     dataCities = json.load(json_file)
 
 quickSearch1Btn = Button(app, text = dataCities['1'], width = 25, command = lambda: quickRun(1))
-quickSearch1Btn.place(x=500,y=200)
+quickSearch1Btn.place(relx = 0.85, rely = 0.37, anchor = CENTER)
 
 quickSearch2Btn = Button(app, text = dataCities['2'], width = 25, command = lambda: quickRun(2))
-quickSearch2Btn.place(x=500,y=225)
+quickSearch2Btn.place(relx = 0.85, rely = 0.45, anchor = CENTER)
 
 quickSearch3Btn = Button(app, text = dataCities['3'], width = 25, command = lambda: quickRun(3))
-quickSearch3Btn.place(x=500,y=250)
+quickSearch3Btn.place(relx = 0.85, rely = 0.53, anchor = CENTER)
 
 
 historyBtn = Button(app, text = 'History', command = historyDisplay)
-historyBtn.pack()
+historyBtn.place(relheight = 0.07, relx = 0.3, rely = 0.06)
  
 app.mainloop()
