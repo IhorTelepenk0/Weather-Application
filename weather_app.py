@@ -18,17 +18,16 @@ apiKey = config['apiKey']['key']
 
 
 def getWeather(city):
-    result = requests.get(urlAPI.format(city, apiKey))  #format works specially with '{}' brackets
+    result = requests.get(urlAPI.format(city, apiKey))
     if result:
         jsonRes = result.json()
-        #to receive (City, Country, temperCelsius, icon, weather)
         city = jsonRes['name']
         country = jsonRes['sys']['country']
         temperKelvin = jsonRes['main']['temp']
         temperCelsius = temperKelvin - 273.15
         icon = jsonRes['weather'][0]['icon']
         weather = jsonRes['weather'][0]['main']
-        final = (city, country, temperCelsius, icon, weather)   #it's touple
+        final = (city, country, temperCelsius, icon, weather)
         return final
     else:
         return None
@@ -47,7 +46,6 @@ def storeHist(cityName):
 
 def findAndDestoryDisplayedElems(window, type):
     allWidgets = window.place_slaves()
-    #print("widgets: ", allWidgets)
     for widget in allWidgets:
         if widget.winfo_class() == type:
             widget.destroy()
@@ -205,13 +203,6 @@ def openDescr():
 
     detailsApp.mainloop()
 
-#in quick_tabs_cities the cities are stored in JSON format (for 3 buttons):
-#quickCitiesData = {
-#    '1': 'Rzeszow',
-#    '2': 'Casablanca',
-#    '3': 'Vinnytsia'
-#}
-
 def quickRun(ind):
     if ind == 1:
         cityText.set(quickSearch1Btn['text'])
@@ -243,9 +234,7 @@ def historyDisplay():
     with open('Data/search_history.json') as json_file:
         historyCities = json.load(json_file)
     historyOptions = []
-    
-    #historyOptions[0] = historyCities['city1']
-    #historyOptions[1] = historyCities['city2']
+
     for histIndex in range(5):
         historyOptions.append(historyCities[str(histIndex)])
 
@@ -256,7 +245,6 @@ def historyDisplay():
             search()
             menuHist.destroy()
         
-
     dropdownSet = StringVar(app)
     dropdownSet.set('Last searches:') 
     menuHist = OptionMenu(app, dropdownSet, *historyOptions, command =  searchChosenCity)
@@ -271,13 +259,11 @@ app['bg'] = '#62B0E5'
 
 cityText = StringVar()
 cityEntry = Entry(app, textvariable = cityText)
-#cityEntry.pack() 
 cityEntry.place(relwidth = 0.2, relheight = 0.07, relx = 0.39, rely = 0.06)
 
 searchImg = PhotoImage(file = 'tech_icons/search_icon.png')
 searchBtn = Button(app, image = searchImg, width = 12, command = search)
 searchBtn['bg'] = '#FFFFFF'
-#searchBtn.pack()
 searchBtn.place(relwidth = 0.04, relheight = 0.07, relx = 0.6, rely = 0.06)
 
 locationLbl = Label(app, text = '', font = ('bold', 20), justify = CENTER)
@@ -299,12 +285,9 @@ weatherLbl.place(relx = 0.5, rely = 0.7, anchor = CENTER)
 
 
 otherCitiesBtn = Button(app, text = 'Other Cities', command = multipleCitiesFound)
-#otherCitiesBtn.pack()
 
 
 detailedDescrBtn = Button(app, text = 'View Details', width = 15, command = openDescr)
-#detailedDescrBtn.pack()
-
 
 
 pencilImg = PhotoImage(file = 'tech_icons/pencil.png')
