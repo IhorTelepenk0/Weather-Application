@@ -1,9 +1,7 @@
 from tkinter import *
 from tkinter import messagebox
 from configparser import ConfigParser
-
 from datetime import datetime
-
 import requests
 import json
 
@@ -15,7 +13,11 @@ config = ConfigParser()
 config.read(configFile)
 apiKey = config['apiKey']['key']
 
+quickTabsFile = 'Data/quick_tabs_cities.json'
+historyFile = 'Data/search_history.json'
+allCitiesFile = 'Data/city_list.json'
 
+bgColor = '#62B0E5'
 
 def getWeather(city):
     result = requests.get(urlAPI.format(city, apiKey))
@@ -27,20 +29,19 @@ def getWeather(city):
         temperCelsius = temperKelvin - 273.15
         icon = jsonRes['weather'][0]['icon']
         weather = jsonRes['weather'][0]['main']
-        final = (city, country, temperCelsius, icon, weather)
+        final = (city, country, temperCelsius, icon, weather) #touple with with appropriate template will be returned
         return final
     else:
         return None
 
 def storeHist(cityName):
-
      if cityName != '':
-        with open('Data/search_history.json') as json_file:
+        with open(historyFile) as json_file:
             cityStored = json.load(json_file)
             for i in range(4, 0, -1):
                 cityStored[str(i)] = cityStored[str(i-1)]
             cityStored['0'] = cityName
-        with open('Data/search_history.json', 'w') as outfile:
+        with open(historyFile, 'w') as outfile:
             outfile.truncate(0)
             json.dump(cityStored, outfile)
 
@@ -70,7 +71,7 @@ def search() :
         messagebox.showerror('Wrong Location Chosen', '"{}" is not found.'.format(city))
 
 def cityReps(city):
-    with open('Data/city_list.json', encoding = "UTF-8") as json_file:
+    with open(allCitiesFile, encoding = "UTF-8") as json_file:
         allCities = json.load(json_file)
     repIds = []
     for checkedCityEntry in allCities:
@@ -85,7 +86,7 @@ def multipleCitiesFound():
 
     indicesCities = cityReps(locationLbl['text'].split(',')[0])
 
-    with open('Data/city_list.json', encoding = "UTF-8") as json_file:
+    with open(allCitiesFile, encoding = "UTF-8") as json_file:
             allCities = json.load(json_file)
 
     shownOptions = []
@@ -116,7 +117,6 @@ def multipleCitiesFound():
 
     cityChoosingWind.mainloop()
 
-
 def getWeatherDetails():
     city = cityText.get()
     res = requests.get(urlAPI.format(city, apiKey))
@@ -139,51 +139,50 @@ def getWeatherDetails():
     else:
         return None
 
-
 def openDescr():
     detailsApp = Tk()
     detailsApp.title("Weather description window")
     detailsApp.geometry("500x250")
-    detailsApp['bg']='#62B0E5'
+    detailsApp['bg'] = bgColor
 
     locLbl = Label(detailsApp, text = locationLbl['text'], font = ('bold', 20))
-    locLbl['bg']='#62B0E5'
+    locLbl['bg']=bgColor
     locLbl.pack()
 
     coordinatesLbl = Label(detailsApp, text = 'Coordinates')
-    coordinatesLbl['bg']='#62B0E5'
+    coordinatesLbl['bg']=bgColor
     coordinatesLbl.pack()
 
     descriptionLbl = Label(detailsApp, text = 'Description')
-    descriptionLbl['bg']='#62B0E5'
+    descriptionLbl['bg']=bgColor
     descriptionLbl.pack()
 
     minTemperatureLbl = Label(detailsApp, text = 'Min Temperature')
-    minTemperatureLbl['bg']='#62B0E5'
+    minTemperatureLbl['bg']=bgColor
     minTemperatureLbl.pack()
 
     maxTemperatureLbl = Label(detailsApp, text = 'Max Temperature')
-    maxTemperatureLbl['bg']='#62B0E5'
+    maxTemperatureLbl['bg']=bgColor
     maxTemperatureLbl.pack()
 
     windSpLbl = Label(detailsApp, text = 'Wind Speed')
-    windSpLbl['bg']='#62B0E5'
+    windSpLbl['bg']=bgColor
     windSpLbl.pack()
 
     atmPressureLbl = Label(detailsApp, text = 'Atmospheric Pressure')
-    atmPressureLbl['bg']='#62B0E5'
+    atmPressureLbl['bg']=bgColor
     atmPressureLbl.pack()
 
     humidLbl = Label(detailsApp, text = 'Humidity')
-    humidLbl['bg']='#62B0E5'
+    humidLbl['bg']=bgColor
     humidLbl.pack()
 
     locDateTimeMesLbl = Label(detailsApp, text = 'Date and Time')
-    locDateTimeMesLbl['bg']='#62B0E5'
+    locDateTimeMesLbl['bg']=bgColor
     locDateTimeMesLbl.pack()
 
     locDateTimeLbl = Label(detailsApp, text = 'Local Date and Time')
-    locDateTimeLbl['bg']='#62B0E5'
+    locDateTimeLbl['bg']=bgColor
     locDateTimeLbl.pack()
 
     theDetails = getWeatherDetails()
@@ -214,7 +213,7 @@ def quickRun(ind):
 
 def writeQuickBut(ind):
     if cityText.get() != '':
-        with open('Data/quick_tabs_cities.json') as json_file:
+        with open(quickTabsFile) as json_file:
             dataCities = json.load(json_file)
         if ind == 1:
             quickSearch1Btn['text'] = cityText.get()
@@ -225,13 +224,13 @@ def writeQuickBut(ind):
         if ind == 3:
             quickSearch3Btn['text'] = cityText.get()
             dataCities['3'] = quickSearch3Btn['text']
-        with open('Data/quick_tabs_cities.json', 'w') as outfile:
+        with open(quickTabsFile, 'w') as outfile:
             outfile.truncate(0)
             json.dump(dataCities, outfile)
 
 def historyDisplay():
     
-    with open('Data/search_history.json') as json_file:
+    with open(historyFile) as json_file:
         historyCities = json.load(json_file)
     historyOptions = []
 
@@ -251,11 +250,12 @@ def historyDisplay():
     historyBtn.place_forget()
     menuHist.place(relheight = 0.07, relx = 0.21, rely = 0.06)
 
+#the actual app GUI:
 
 app = Tk()
 app.title("Weather application")
 app.geometry('700x350')
-app['bg'] = '#62B0E5'
+app['bg'] = bgColor
 
 cityText = StringVar()
 cityEntry = Entry(app, textvariable = cityText)
@@ -267,20 +267,20 @@ searchBtn['bg'] = '#FFFFFF'
 searchBtn.place(relwidth = 0.04, relheight = 0.07, relx = 0.6, rely = 0.06)
 
 locationLbl = Label(app, text = '', font = ('bold', 20), justify = CENTER)
-locationLbl['bg'] = '#62B0E5'
+locationLbl['bg'] = bgColor
 locationLbl.place(relwidth = 0.38, relx = 0.5, rely = 0.25, anchor = CENTER)
 
 img = PhotoImage(file = '')
 image = Label(app, image = img, justify = CENTER)
-image['bg'] = '#62B0E5'
+image['bg'] = bgColor
 image.place(relx = 0.5, rely = 0.44, anchor = CENTER)
 
 temperLbl = Label(app, text = '', font = ('bold'), justify = CENTER)
-temperLbl['bg'] = '#62B0E5'
+temperLbl['bg'] = bgColor
 temperLbl.place(relx = 0.5, rely = 0.6, anchor = CENTER)
 
 weatherLbl = Label(app, text = '', justify = CENTER)
-weatherLbl['bg'] = '#62B0E5'
+weatherLbl['bg'] = bgColor
 weatherLbl.place(relx = 0.5, rely = 0.7, anchor = CENTER)
 
 
@@ -301,7 +301,7 @@ writeQuick3Btn = Button(app, image = pencilImg, command = lambda: writeQuickBut(
 writeQuick3Btn.place(relx = 0.7, rely = 0.53, anchor = CENTER)
 
 
-with open('Data/quick_tabs_cities.json') as json_file:
+with open(quickTabsFile) as json_file:
     dataCities = json.load(json_file)
 
 quickSearch1Btn = Button(app, text = dataCities['1'], width = 25, command = lambda: quickRun(1))
