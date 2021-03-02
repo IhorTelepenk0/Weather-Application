@@ -19,6 +19,7 @@ allCitiesFile = 'Data/city_list.json'
 
 bgColor = '#62B0E5'
 
+
 def getWeather(city):
     result = requests.get(urlAPI.format(city, apiKey))
     if result:
