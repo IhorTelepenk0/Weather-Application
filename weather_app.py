@@ -122,7 +122,7 @@ def getWeatherDetails():
     res = requests.get(urlAPI.format(city, apiKey))
     if res:
         jsonRes = res.json()
-        #to receive (coord1, coord2, detDescr, minTemp, maxTemp, windSpeed, pressure, humidity, locTime)
+        # to receive (coord1, coord2, detDescr, minTemp, maxTemp, windSpeed, pressure, humidity, locTime)
         coordLon = jsonRes['coord']['lon']
         coordLat = jsonRes['coord']['lat']
         detDescr = jsonRes['weather'][0]['description']
@@ -316,5 +316,6 @@ quickSearch3Btn.place(relx = 0.85, rely = 0.53, anchor = CENTER)
 
 historyBtn = Button(app, text = 'History', command = historyDisplay)
 historyBtn.place(relheight = 0.07, relx = 0.3, rely = 0.06)
- 
+
+# Start of the main loop
 app.mainloop()
